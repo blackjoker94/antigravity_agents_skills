@@ -1,0 +1,11 @@
+# Skills Location Reference
+
+## Global Skills (applied to ALL workspaces)
+C:\Users\<machine_name>\.gemini\config\skills\
+
+Installed:
+- flutter-code-review  → run before marking any task done
+- flutter-cubit        → scaffold Cubit + sealed state
+
+## Per-Project Skills (project-specific overrides)
+<project-root>/.agents/skills/<skill-name>/SKILL.md
