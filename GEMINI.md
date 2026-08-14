@@ -20,6 +20,7 @@ that override defaults or encode decisions specific to this project.
 - Business logic lives in the domain layer
 - Data access (APIs, databases, storage) lives in the data layer
 - Do not introduce new abstractions or patterns without justification
+- Legacy `domain/use_case/` files, if found, should be migrated into the calling Cubit and deleted — flag this during any touch of that feature
 
 ## 2) Shared Code (IMPORTANT)
 
@@ -75,7 +76,9 @@ Rules below only cover things that OVERRIDE defaults or encode project decisions
 ## 1) State Management
 
 - Use **Cubit/Bloc** for feature and application state — not Riverpod, Provider, or GetX
-- Cubits depend ONLY on use cases — never directly on repositories or data sources
+- Cubits depend directly on repository CONTRACTS (`domain/repo/`) — no use case layer
+- Business rules (validation, combining repos, derived logic) live inline in the Cubit method, not in a separate class
+- If a rule is reused across 2+ Cubits, extract it to a plain function/class in `core/` — not a per-feature use case
 - `setState` is allowed ONLY for local UI state (e.g., toggles, form focus) — never for business logic
 - Keep `setState` scoped to the smallest widget possible to avoid redundant rebuilds up the tree
 
@@ -93,20 +96,20 @@ Rules below only cover things that OVERRIDE defaults or encode project decisions
 ## 4) Feature Folder Structure
 
 - `features/{feature_name}/data/`
-- `features/{feature_name}/domain/`
+- `features/{feature_name}/domain/`  → entity/, repo/ only (NO use_case/)
 - `features/{feature_name}/presentation/`
 
 ## 5) Error Handling Contract
 
 - Data layer: catch exceptions and map to typed `Failure` classes
-- Domain layer: return `ApiResult<T>` from use cases and repositories
+- Domain layer: return `ApiResult<T>` from repositories
 - Presentation layer: map failures to user-friendly messages and UI states
 
 ## 6) Dependency Injection
 
 - Use **`get_it`** as the service locator — not `Provider` or constructor-only injection
 - Register dependencies in a single `core/di/` setup file
-- Cubits, use cases, and repositories are resolved via `get_it`, not instantiated manually
+- Cubits and repositories are resolved via `get_it`, not instantiated manually
 
 ## 7) Build Method Discipline (IMPORTANT)
 

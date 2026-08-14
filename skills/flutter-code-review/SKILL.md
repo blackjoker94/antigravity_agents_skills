@@ -18,7 +18,7 @@ Run this checklist before marking any task as done. This is a read-only review �
 
 - [ ] Layer boundaries respected: presentation → domain → data.
 - [ ] No business logic in UI/presentation layer.
-- [ ] Cubits depend only on use cases, not repositories or data sources.
+- [ ] Cubits depend directly on repository contracts (`domain/repo/`), not concrete implementations; no use case layer.
 - [ ] Domain layer has no Flutter/UI imports.
 - [ ] Shared logic placed in `core/`, not duplicated across features.
 
